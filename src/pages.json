@@ -1,0 +1,195 @@
+{
+  "easycom": {
+    "custom": {
+      "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/home",
+      "style": {
+        "enablePullDownRefresh": true,
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "发现",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#F8F8F8",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/index/user",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/index/setting",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "设置",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/index/community",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "社区",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/index/contact",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "通讯录",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/player/index",
+      "style": {
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "播放器",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#fff"
+      }
+    },
+    {
+      "path": "pages/detail/playlist",
+      "style": {
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "歌单",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#191919",
+        "backgroundColorBottom": "#fff"
+      }
+    },
+    {
+      "path": "pages/detail/comment",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "评论",
+        "navigationStyle": "custom",
+        "onReachBottomDistance": 200,
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#fff"
+      }
+    },
+    {
+      "path": "pages/detail/artist",
+      "style": {
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "艺人",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#191919",
+        "backgroundColorBottom": "#fff"
+      }
+    },
+    {
+      "path": "pages/explore/playlist",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "歌单广场",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#f8f8f8"
+      }
+    },
+    {
+      "path": "pages/explore/toplist",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "榜单",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#f8f8f8"
+      }
+    },
+    {
+      "path": "pages/customize/home",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "自定义主页",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/login/register",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "注册",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    },
+    {
+      "path": "pages/login/profile",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "注册",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#3b3b3b",
+    "backgroundColor": "#fff",
+    "selectedColor": "#FF3A39",
+    "list": [
+      {
+        "pagePath": "pages/index/home",
+        "iconPath": "/static/c3w_3b.png",
+        "selectedIconPath": "/static/c3w_checked.png",
+        "text": "发现"
+      },
+      {
+        "pagePath": "pages/index/community",
+        "iconPath": "/static/com_3b.png",
+        "selectedIconPath": "/static/com_checked.png",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/index/contact",
+        "iconPath": "/static/con_3b.png",
+        "selectedIconPath": "/static/con_checked.png",
+        "text": "通讯录"
+      },
+      {
+        "pagePath": "pages/index/user",
+        "iconPath": "/static/c3u_3b.png",
+        "selectedIconPath": "/static/c3u_checked.png",
+        "text": "我的"
+      },
+      {
+        "pagePath": "pages/index/setting",
+        "iconPath": "/static/set_3b.png",
+        "selectedIconPath": "/static/set_checked.png",
+        "text": "设置"
+      }
+    ]
+  }
+}
+
