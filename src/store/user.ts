@@ -231,6 +231,7 @@ export const useStore = defineStore('user', {
     // 存储用户token
     setUserInfo(token: string) {
       this.token = token
+      uni.setStorageSync('token', token)
     }
   }
 })

@@ -10,7 +10,7 @@ export function register(data: object) {
   })
 }
 
-export function userInfo() {
+export function getUserInfo() {
   return request({
     url: api.LOGIN.GET_USERINFO, 
     method: "GET", 

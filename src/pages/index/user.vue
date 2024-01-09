@@ -4,19 +4,38 @@ Description: 用户主页
 <script lang="ts" setup>
 import TheNavBar from '@/components/TheNavBar.vue'
 import ThePopupLogin from '@/components/ThePopupLogin.vue'
-import SectionFrame from '@/components/section/SectionFrame.vue'
 import ThePlayerBottomBar from '@/components/ThePlayerBottomBar.vue'
-import { convertCount } from '@/common/util'
-// import TheNotRegister from '@/components/TheNotRegister.vue'
-import { onHide, onShow, onReady } from '@dcloudio/uni-app'
+import sectionFrame from '@/components/section/SectionFrame.vue'
+import { onShow, onReady, onLoad } from '@dcloudio/uni-app'
 import { reactive, ref, computed } from 'vue'
-import { useStore as useUserStore } from '@/store/user'
 import { useStore } from '@/store'
+import { getUserInfo } from "@/common/api/login";
+import { useStore as useUserStore } from "@/store/user";
+import { user } from "@/types"
+import dayjs from 'dayjs'
 
 const store = useStore()
 const userStore = useUserStore()
 const navShow = ref<boolean>()
 const userWrapRef = ref<any>()
+
+let userInfo = reactive<user>({
+  // 用户名
+  userName: '',
+  // 性别
+  sex: 0,
+  // 头像
+  avatar: '',
+  // 生日
+  birthday: new Date(),
+  // 地区
+  region: '',
+  // 标签
+  label: [],
+  // 收藏的歌单id
+  listLike: []
+})
+
 const data = reactive<any>({
   // 初始化状态
   init: false,
@@ -24,36 +43,70 @@ const data = reactive<any>({
   // 用户信息
   user: {},
 
-  // 用户歌单信息
-  UserPlaylist: {
-    more: true,
-    // 创建的歌单
-    listCreator: [],
-    // 喜欢的歌单
-    listLike: []
-  }
 })
 
-onShow(() => {
+onShow(async() => {
   store.setTheme('raw', {
     navigationBarColor: '#ffffff'
   })
+  await init()
+  data.init = true
+})
+onLoad(() => {
+  console.log('load')
 })
 
-onReady(() => {
-  init()
+onReady(async() => {
+  await init()
+  data.init = true
 })
 // 初始化
 async function init() {
-    // uni.showLoading({
-    //   title: `加载中`
-    // })
+  if (userStore.token) {
+    try {
+      const { data } = await getUserInfo()
+      userInfo = data
+      userInfo.label.push('+')
+    } catch (err) {
+      console.log(err)
+    }
 
-    data.init = true
+  } else {
+    userInfo = {
+      userName: '',
+      sex: 0,
+      avatar: '',
+      birthday: new Date(),
+      region: '',
+      label: [],
+      listLike: []
+    }
+  }
+
 }
 
 function openPopup() {
-  uni.$emit('popupOpen', [{ name: '注册' }, { name: '登录' }])
+  if (!userStore.token) {
+    uni.$emit('popupOpen', [{ name: '注册' }, { name: '登录' }])
+  }
+}
+
+const userInfoTxt = computed(() => {
+  const currentDate = dayjs();
+
+  // 出生日期的 dayjs 对象
+  const birthDate = dayjs(userInfo.birthday);
+
+  // 计算年龄
+  const age = currentDate.diff(birthDate, 'year');
+
+  return (userInfo.sex? '男' : '女') + 
+  ' | ' + age + '岁' + 
+  (userInfo.region.length? '|' + userInfo.region : '')
+})
+
+function toPlaylist (item: any) {
+
 }
 
 const pageStyle = computed(() => store.getPageMetaStyle)
@@ -75,82 +128,46 @@ const pageStyle = computed(() => store.getPageMetaStyle)
   <!-- ↓ 播放器 -->
   <the-player-bottom-bar />
 
-  <view class="user-wrap fixed-top fixed-bottom" ref="userWrapRef">
-    <image
-      v-if="data.user.backgroundUrl"
-      class="user-wrap-bg"
-      :src="data.user.backgroundUrl"
-      mode="aspectFill"
-    />
+  <view class="user-wrap fixed-top fixed-bottom" ref="userWrapRef" v-if="data.init">
 
     <view class="user-main">
       <!-- ↓ 用户信息 -->
       <view @tap="openPopup" class="user-main-info">
         <!-- 头像 -->
         <image
-          src="@/static/user.png"
+          :src="!userInfo.avatar? '../../static/user.png' : userInfo.avatar"
           class="user-main-info__user-avatar user-avatar-not-register"
           mode="aspectFit"
         />
         <!-- 名 -->
         <view class="user-main-info__user-name">
-          {{ '点击登录' }}
+          {{ !userInfo.userName? '点击登录' : userInfo.userName }}
         </view>
         <!-- 描述 -->
-        <view class="user-main-info__user-sub">
+        <view class="user-main-info__user-sub" v-if="!userInfo.userName">
           <template> 登录体验更多精彩 </template>
         </view>
+        <view class="user-main-info__user-sub" v-else>
+          <template> {{ userInfoTxt }} </template>
+        </view>
+        <view class="user-main-info__labels">
+          <view v-for="(item, key) in userInfo.label" :key="key" style="margin-left: 12rpx;">
+            <u-tag :text="item" size="mini" plain shape="circle"/>
+          </view>
+        </view>
       </view>
-
-      <!-- ↓ 创建的歌单 -->
+          <!-- ↓ 收藏的歌单 -->
       <view class="user-main__playlist-wrap">
         <view class="user-main__playlist-wrap-spacing">
           <section-frame
-            :title="`创建的歌单 (${data.UserPlaylist.listCreator.length}个)`"
+            :title="`收藏的歌单 (${userInfo.listLike? userInfo.listLike.length : 0}个)`"
             :more="false"
           >
-            <template #default>
-              <view
-                v-if="data.UserPlaylist.listCreator.length > 0"
-                class="user-main__playlist-spacing"
-              >
-                <view
-                  class="user-main__playlist"
-                  v-for="item in data.UserPlaylist.listCreator"
-                  :key="item.payload"
-                >
-                  <image
-                    class="user-main__playlist-image"
-                    :src="`${item.picUrl}?param=100y100`"
-                    mode="aspectFit"
-                  />
-                  <view class="user-main__playlist-desc text-ellipsis-single">
-                    <view class="user-main__playlist-title text-ellipsis-single">{{
-                      item.title
-                    }}</view>
-                    <view class="user-main__playlist-sub text-ellipsis-single">
-                      {{ item.trackCount }} 首，播放 {{ convertCount(item.playCount) }} 次
-                    </view>
-                  </view>
-                </view>
-              </view>
-
-              <view v-else class="user-main__playlist-spacing-empty"> 暂无创建的歌单 </view>
-            </template>
-          </section-frame>
-        </view>
-      </view>
-
-      <!-- ↓ 收藏的歌单 -->
-      <view v-if="data.UserPlaylist.listLike.length > 0" class="user-main__playlist-wrap">
-        <view class="user-main__playlist-wrap-spacing">
-          <section-frame
-            :title="`收藏的歌单 (${data.UserPlaylist.listLike.length}个)`"
-            :more="false"
-          >
-            <template #default>
-              <view class="user-main__playlist-spacing">
-                <view
+          <!-- TODO收藏列表 -->
+            <template #default >
+              <view class="user-main__playlist-spacing" v-if="userInfo.listLike?.length">
+                <!-- <view
+                  @tap.stop.prevent="toPlaylist(item)"
                   class="user-main__playlist"
                   v-for="item in data.UserPlaylist.listLike"
                   :key="item.payload"
@@ -168,8 +185,9 @@ const pageStyle = computed(() => store.getPageMetaStyle)
                       {{ item.trackCount }} 首，播放 {{ convertCount(item.playCount) }} 次
                     </view>
                   </view>
-                </view>
+                </view> -->
               </view>
+              <view v-else class="user-main__playlist-spacing-empty">快去收藏吧</view>
             </template>
           </section-frame>
         </view>
@@ -250,13 +268,17 @@ const pageStyle = computed(() => store.getPageMetaStyle)
       .user-main-info__user-sub {
         font-size: 32rpx;
         color: var(--theme-text-sub-color);
-        margin-bottom: 14rpx;
+        margin-bottom: 20rpx;
         text-align: center;
       }
+      
+      .user-main-info__labels {
+        display: flex;
+        justify-content: center;
+      }
     }
-
-    // 歌单
-    .user-main__playlist-wrap {
+        // 歌单
+        .user-main__playlist-wrap {
       width: 100%;
       box-sizing: border-box;
       margin-top: 30.7rpx;

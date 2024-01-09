@@ -26,7 +26,7 @@ function themeChange(e: any) {
 
 // 退出登录
 function exit() {
-  userStore.$reset()
+  userStore.setUserInfo('')
 }
 
 // 前往登录
@@ -34,10 +34,18 @@ function login() {
   uni.switchTab({ url: './user' })
 }
 
-// 前往自定义主页
-function toSettingHome() {
-  uni.navigateTo({ url: '../customize/home' })
+// 修改个人资料
+function profile() {
+  uni.navigateTo({ url: '../login/profile' })
 }
+
+let show = ref<boolean>(false)
+
+function confirm() {
+  show.value = false
+  exit()
+}
+
 </script>
 
 <template>
@@ -61,20 +69,26 @@ function toSettingHome() {
           :checked="themeDark"
         />
       </view>
-      <!-- <view class="setting-list-item">
-        <view class="setting-list-item-title">青少年模式</view>
-        <switch class="setting-switch-btn" color="#D1403C" />
+      <view class="button" v-if="!userStore.token">
+        <u-button type="success" plain @click="login" >
+        前往登录
+        </u-button>
       </view>
-      <view class="setting-list-item" @tap="toSettingHome">
-        <view class="setting-list-item-title">自定义主页</view>
-      </view> -->
-    </view>
-
-    <!-- 退出登录 -->
-    <view class="setting-login">
-      
+      <template v-else>
+        <view class="button">
+          <u-button type="primary" plain @click="profile">
+            修改个人资料
+          </u-button>
+        </view>
+        <view class="button">
+          <u-button type="error" plain @click="show = true">
+            退出登录
+          </u-button>
+        </view>
+      </template>
     </view>
   </view>
+  <u-modal :show="show" content="确定要退出登录吗？" @cancel="show = false" @confirm="confirm" showCancelButton	></u-modal>
 </template>
 
 <style lang="scss" scoped>
@@ -89,7 +103,11 @@ function toSettingHome() {
     margin: 32rpx;
     background-color: var(--theme-background-color-card);
     border-radius: 12rpx;
-
+    position: 16rpx;
+    .button{
+      margin-top: 32rpx;
+      padding: 0 16rpx;
+    }
     .setting-list-item {
       width: 100%;
       height: 96rpx;
@@ -103,32 +121,6 @@ function toSettingHome() {
       .setting-switch-btn {
         transform: scale(0.8);
       }
-    }
-  }
-
-  .setting-login {
-    width: 100%;
-    height: 96rpx;
-    padding: 0 32rpx;
-    box-sizing: border-box;
-
-    .setting-login-btn,
-    .setting-exit-btn {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12rpx;
-    }
-
-    .setting-login-btn {
-      color: var(--theme-text-title-color);
-      background-color: var(--theme-background-color-card);
-    }
-
-    .setting-exit-btn {
-      color: #fff;
-      background-color: var(--theme-color);
     }
   }
 }

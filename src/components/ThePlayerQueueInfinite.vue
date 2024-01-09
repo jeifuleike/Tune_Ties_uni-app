@@ -1,10 +1,4 @@
-<!--
-Author: zusheng
-Date: 2022-04-29 19:40:15
-LastEditTime: 2022-05-13 19:34:38
-Description: 歌曲列表-虚拟无限滚动列表
-FilePath: \uni-preset-vue-vite-ts\src\components\ThePlayerQueueInfinite.vue
--->
+
 
 <script lang="ts" setup>
 import { Song } from '@/types'

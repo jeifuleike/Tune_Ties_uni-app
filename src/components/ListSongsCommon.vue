@@ -1,10 +1,3 @@
-<!--
-Author: zusheng
-Date: 2022-04-29 12:41:58
-LastEditTime: 2022-05-14 22:53:37
-Description: 歌曲列表-普通滚动列表
-FilePath: \uni-preset-vue-vite-ts\src\components\ListSongsCommon.vue
--->
 
 <script lang="ts" setup>
 import { computed } from 'vue'
@@ -21,6 +14,7 @@ function tapHandler(e: any, data: any) {
   const datasetKeys = Object.keys(e.target.dataset)
   if (datasetKeys.includes('onMore')) {
   } else {
+    console.log(data.payload, 'data.payload')
     // 添加歌曲信息到播放器
     playerStore.setPlayerInfo(data.payload)
     // 打开播放器

@@ -1,10 +1,4 @@
-<!--
-Author: zusheng
-Date: 2022-04-28 20:04:33
-LastEditTime: 2022-05-15 23:31:24
-Description: 播放器的封面显示页（首页的光碟转动）
-FilePath: \uni-preset-vue-vite-ts\src\components\ThePlayerPoster.vue
--->
+
 
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'

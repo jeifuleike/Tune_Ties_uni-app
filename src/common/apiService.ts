@@ -86,6 +86,7 @@ export class Request {
 
     // 加入用户 token 到请求头
     const token = useStore().token;
+    console.log(token, 'token')
     if (token) {
       header.Authorization = `Bearer ${token}`;
     }
@@ -106,7 +107,28 @@ export class Request {
         method: method,
         header: header,
         success: (res: any) => {
-          // 将结果抛出
+          console.log(res, 'res');
+
+          // 检查HTTP状态码
+          if (res.statusCode === 401) {
+            // 处理401错误，清空用户token并导航到登录页面
+            useStore().setUserInfo('');
+            uni.switchTab({
+              url: '/pages/index/home'
+            });
+            // 为进一步处理设置错误消息，如果需要的话
+            res.data.msg = '登录信息过期，请重新登录';
+            uni.showToast({
+              title: res.data.msg,
+              icon: 'error',
+              duration: 2000
+            });
+            // 用错误消息拒绝promise
+            reject(res.data);
+            return;
+          }
+
+          // 继续处理success回调
           if (!res.data.state) {
             uni.showToast({
               title: res.data.msg,
@@ -114,25 +136,24 @@ export class Request {
               duration: 2000
             });
           }
-          resolve(res.data)
+          resolve(res.data);
         },
-        //请求失败
         fail: (e: any) => {
-          uni.showToast({
-            title: "" + e.data.msg,
-            icon: 'none'
-          });
-          resolve(e.data);
+          console.log(e.statusCode);
+
+          // 如果需要，处理其他失败情况
+
+          // 用错误消息拒绝promise
+          reject(e.data);
         },
-        //请求完成
         complete() {
-          //隐藏加载
+          // 隐藏加载
           if (!hideLoading) {
             uni.hideLoading();
           }
           return;
         }
-      })
-    })
+      });
+    });
   }
 }

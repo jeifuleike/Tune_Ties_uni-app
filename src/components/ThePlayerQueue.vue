@@ -1,10 +1,4 @@
-<!--
-Author: zusheng
-Date: 2022-04-28 20:27:55
-LastEditTime: 2022-05-13 20:28:46
-Description: 播放器的代播列表显示
-FilePath: \uni-preset-vue-vite-ts\src\components\ThePlayerQueue.vue
--->
+
 
 <script lang="ts" setup>
 import ThePlayerQueueInfinite from '@/components/ThePlayerQueueInfinite.vue'

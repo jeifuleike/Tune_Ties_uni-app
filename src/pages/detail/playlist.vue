@@ -76,12 +76,6 @@ function toArtistDetail() {
   })
 }
 
-// 跳转到评论页面
-function toComment() {
-  uni.navigateTo({
-    url: `./comment?payload=${data.id}&type=2`
-  })
-}
 
 // 订阅歌曲
 function toSubscribe() {

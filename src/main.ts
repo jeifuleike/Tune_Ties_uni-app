@@ -8,6 +8,7 @@ export function createApp() {
   app.use(createPinia())
 
   app.use(uviewPlus)
+  uni.$u.config.unit = 'rpx'
   return {
     app
   }

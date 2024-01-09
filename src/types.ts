@@ -78,5 +78,7 @@ export type user = {
   // 地区
   region: string,
   // 标签
-  label: string[]
+  label: string[],
+  // 收藏的歌单id
+  listLike?: string[]
 }

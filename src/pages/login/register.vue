@@ -3,10 +3,12 @@ import TheNavBar from '@/components/TheNavBar.vue'
 import { onShow } from '@dcloudio/uni-app'
 import { reactive } from 'vue'
 import { useStore as useMainStore } from '@/store'
+import { useStore as useUserStore } from '@/store/user'
 import { computed } from 'vue'
 import { register } from "@/common/api/login";
 
 const mainStore = useMainStore()
+const userStore = useUserStore()
 const data = reactive<any>({
   // 输入内容
   userName: '',
@@ -19,7 +21,12 @@ const data = reactive<any>({
 
 })
 
-onShow(() => mainStore.setTheme('raw'))
+onShow(() => {
+  mainStore.setTheme('raw')
+  if (userStore.token) {
+    uni.switchTab({ url: '../index/home' })
+  }
+})
 
 // 输入手机号
 function inputPhone(e: any) {
@@ -38,17 +45,17 @@ function confirmInputPassword(e: any) {
 
 async function finish() {
   const obj = { ...data }
-  delete data.confirmPassword
-  const res = await register(data)
+  delete obj.confirmPassword
+  const res = await register(obj)
   if (res.state) {
     uni.showToast({
       title: res.msg,
       duration: 2000
     });
-    uni.setStorageSync('token', res.data.token)
+    userStore.setUserInfo(res.data.token)
     uni.navigateTo({
-    url: './profile'
-  })
+      url: './profile'
+    })
   }
 }
 

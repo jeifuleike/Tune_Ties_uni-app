@@ -4,6 +4,7 @@ import { useStore as useMainStore } from '@/store'
 import { onShow } from '@dcloudio/uni-app'
 import { reactive, ref } from 'vue';
 import { user } from "@/types"
+import { getUserInfo } from "@/common/api/login";
 
 const mainStore = useMainStore()
 onShow(() => mainStore.setTheme('raw'))
@@ -22,12 +23,18 @@ const userInfo = reactive<user>({
   // 标签
   label: []
 })
+
+getUserInfo().then(res => {
+  console.log(res, 'res')
+})
+
 </script>
 
 <template>
   <page-meta :page-style="mainStore.getPageMetaStyle" />
 
   <the-nav-bar :title="'我的资料'" :back="true" :filter="false" :bg="true" />
+  
 </template>
 
 <style lang="scss">
