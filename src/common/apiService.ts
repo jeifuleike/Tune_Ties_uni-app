@@ -86,7 +86,6 @@ export class Request {
 
     // 加入用户 token 到请求头
     const token = useStore().token;
-    console.log(token, 'token')
     if (token) {
       header.Authorization = `Bearer ${token}`;
     }

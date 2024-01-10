@@ -24,11 +24,6 @@ function themeChange(e: any) {
   }
 }
 
-// 退出登录
-function exit() {
-  userStore.setUserInfo('')
-}
-
 // 前往登录
 function login() {
   uni.switchTab({ url: './user' })
@@ -43,7 +38,15 @@ let show = ref<boolean>(false)
 
 function confirm() {
   show.value = false
-  exit()
+  userStore.setUserInfo('')
+  uni.showToast({
+    title: '退出登录成功！',
+    duration: 2000
+  });
+  userStore.setUserInfo('')
+  setTimeout(() => {
+    uni.switchTab({ url: '../index/home' })
+  }, 2000)
 }
 
 </script>

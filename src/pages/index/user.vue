@@ -105,10 +105,6 @@ const userInfoTxt = computed(() => {
   (userInfo.region.length? '|' + userInfo.region : '')
 })
 
-function toPlaylist (item: any) {
-
-}
-
 const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
 
@@ -157,7 +153,7 @@ const pageStyle = computed(() => store.getPageMetaStyle)
         </view>
       </view>
           <!-- ↓ 收藏的歌单 -->
-      <view class="user-main__playlist-wrap">
+      <view class="user-main__playlist-wrap" v-if="userInfo.userName">
         <view class="user-main__playlist-wrap-spacing">
           <section-frame
             :title="`收藏的歌单 (${userInfo.listLike? userInfo.listLike.length : 0}个)`"

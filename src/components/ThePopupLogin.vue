@@ -5,7 +5,7 @@ Description: 选择登录方式
 <script lang="ts" setup>
 import ThePopupFrame from './ThePopupFrame.vue'
 
-const urls = [`../../pages/login/register`, `../../pages/login/LogIn`]
+const urls = [`../../pages/login/register?type=register`, `../../pages/login/register?type=login`]
 function toLogin(data: any) {
   close()
   uni.navigateTo({

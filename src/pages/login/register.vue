@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import TheNavBar from '@/components/TheNavBar.vue'
-import { onShow } from '@dcloudio/uni-app'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { reactive } from 'vue'
 import { useStore as useMainStore } from '@/store'
 import { useStore as useUserStore } from '@/store/user'
 import { computed } from 'vue'
-import { register } from "@/common/api/login";
+import { register, login } from "@/common/api/login";
 
 const mainStore = useMainStore()
 const userStore = useUserStore()
@@ -17,9 +17,18 @@ const data = reactive<any>({
   password: '',
 
   // 确认密码
-  confirmPassword: ''
+  confirmPassword: '',
+
+  // 登录或者注册
+  type: 'register'
 
 })
+
+interface ResponseData {
+  state: number;
+  data: any;
+  msg: string;
+}
 
 onShow(() => {
   mainStore.setTheme('raw')
@@ -28,7 +37,11 @@ onShow(() => {
   }
 })
 
-// 输入手机号
+onLoad((options) => {
+  data.type = options.type
+})
+
+// 输入账号
 function inputPhone(e: any) {
   data.userName = e.detail.value
 }
@@ -43,39 +56,64 @@ function confirmInputPassword(e: any) {
   data.confirmPassword = e.detail.value
 }
 
+function changeType() {
+  data.type === 'register'? data.type = 'login' : data.type = 'register'
+  data.userName = ''
+  data.password = ''
+  data.confirmPassword = ''
+}
+
 async function finish() {
   const obj = { ...data }
   delete obj.confirmPassword
-  const res = await register(obj)
+  let res:ResponseData = { data: {}, msg: '', state: 0 }
+  if (data.type === 'register') {
+    res = await register(obj)
+  } else {
+    res = await login(obj)
+  }
   if (res.state) {
     uni.showToast({
       title: res.msg,
       duration: 2000
     });
     userStore.setUserInfo(res.data.token)
-    uni.navigateTo({
-      url: './profile'
-    })
+    setTimeout(() => {
+      if (data.type === 'register') {
+        uni.navigateTo({ url: './profile' })
+      }else {
+        uni.switchTab({ url: '../index/home' })
+      }
+    }, 2000)
+  } else {
+    uni.showToast({
+      icon: 'error',
+      title: res.msg,
+      duration: 2000
+    });
   }
 }
 
-const able = computed(() => {
-  return data.password === data.confirmPassword
+const btnDisabled = computed(() => {
+  if (data.type === 'register') {
+    return data.password.length < 3 || !(data.password === data.confirmPassword)
+  } else {
+    return data.password.length < 3
+  }
 })
-
 </script>
 
 <template>
   <page-meta :page-style="mainStore.getPageMetaStyle" />
 
   <!-- ↓ 自定义导航 -->
-  <the-nav-bar :title="'注册'" :back="true" :filter="false" :bg="true" />
+  <the-nav-bar :title="data.type === 'register'? '注册' : '登录'" :back="true" :filter="false" :bg="true" />
 
   <view class="login-at-phone">
     <view class="login-at-phone__main">
       <!-- 描述 -->
       <view class="login-at-phone__main-title-h2">
-        <text>注册后体验更多精彩</text>
+        <text>{{ data.type === 'register'? '注册后体验更多精彩' : '欢迎登录' }}</text>
       </view>
 
       <!-- 手机号输入框 -->
@@ -102,8 +140,8 @@ const able = computed(() => {
           :adjust-position="false"
         />
       </view>
-
-      <view class="login-at-phone__main-input">
+      <template v-if="data.type === 'register'">
+        <view class="login-at-phone__main-input">
         <input
           @input="confirmInputPassword"
           class="login-at-phone__main-input-content"
@@ -112,13 +150,14 @@ const able = computed(() => {
           :focus="false"
           :adjust-position="false"
         />
-      </view>
-      <text class="errorT" v-if="!able && data.confirmPassword">密码不一致！</text>
-      <!-- 下一步 -->
+        </view>
+        <text class="errorT" v-if="!(data.password === data.confirmPassword) && data.confirmPassword">密码不一致！</text>
+      </template>
+      <text class="changeType" @click="changeType">{{ data.type === 'register'? '前往登录' : '前往注册' }}</text>
       <view class="login-at-phone__main-next">
         <button
         type="warn"
-        :disabled="data.password.length < 3 || data.password.length < 3 || !able"
+        :disabled="btnDisabled"
         @click="finish"
         >完成</button>
       </view>
@@ -197,6 +236,12 @@ const able = computed(() => {
     }
     .errorT {
       color: red;
+    }
+    .changeType {
+      margin-top: 12rpx;
+      margin-right: 32rpx;
+      color: #72B8FF;
+      float: right;
     }
   }
 }
