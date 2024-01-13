@@ -56,10 +56,6 @@ onLoad(() => {
   console.log('load')
 })
 
-onReady(async() => {
-  await init()
-  data.init = true
-})
 // 初始化
 async function init() {
   if (userStore.token) {
@@ -82,7 +78,6 @@ async function init() {
       listLike: []
     }
   }
-
 }
 
 function openPopup() {
