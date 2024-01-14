@@ -7,7 +7,8 @@ const api = {
   LOGIN: {
     POST_REGISTER: '/user/register',
     GET_USERINFO: '/user/userInfo',
-    POST_LOGIN: '/user/login'
+    POST_LOGIN: '/user/login',
+    POST_CHANGEUSERINFO: '/user/changeUserInfo'
   }
 } satisfies apiType;
 // 遍历处理对象给全部api加上/express/api头

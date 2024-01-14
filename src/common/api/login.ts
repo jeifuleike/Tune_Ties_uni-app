@@ -27,3 +27,12 @@ export function login(data: object) {
     data: data
   })
 }
+
+// 修改个人资料
+export function changeUserInfo(data: object) {
+  return request({
+    url: api.LOGIN.POST_CHANGEUSERINFO, 
+    method: "POST",
+    data: data
+  })
+}
