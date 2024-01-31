@@ -4,6 +4,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { durationConvert } from '@/common/util'
 import { useStore as usePlayerStore } from '@/store/player'
+import { useStore as useUserStore } from "@/store/user";
 
 const seeking = ref<boolean>(false)
 const loading = ref<boolean>(true)
@@ -12,6 +13,8 @@ const playerStore = usePlayerStore()
  * 只有在打开了播放器页面时，才开启旋转动画
  */
 const aps = computed(() => (!playerStore.playerStatus.paused ? 'running' : 'paused'))
+
+const { userInfo } = useUserStore()
 
 /**
  * 调整进度
@@ -50,10 +53,14 @@ onMounted(() => {
       class="player-page-cd__stylus"
       :class="{ 'stylus-pause': playerStore.playerStatus.paused }"
     />
-
     <!-- 2. css半透明背景, 可有可无的装饰 -->
     <view class="player-page-cd__poster-bg" />
 
+    <view>
+      <u-avatar :src="userInfo.avatar" :size="60" />
+      <u-avatar src="@/static/+.png" :size="60" />
+      <text>一起听</text>
+    </view>
     <!-- 3. 唱片封面，播放时旋转 -->
     <view class="player-page-cd__poster">
       <image

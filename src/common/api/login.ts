@@ -1,5 +1,6 @@
 import { Request } from "../apiService";
 import api from "../apiExpress";
+console.log(Request, 'Request')
 const request = new Request().http
 
 // 注册
@@ -36,3 +37,4 @@ export function changeUserInfo(data: object) {
     data: data
   })
 }
+

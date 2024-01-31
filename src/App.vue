@@ -5,6 +5,7 @@ import { useStore as useMainStore } from '@/store'
 import { useStore as usePlayerStore } from '@/store/player'
 import { useStore as useUserStore } from '@/store/user'
 import { onLaunch, onThemeChange } from '@dcloudio/uni-app'
+import { getUserInfo } from "@/common/api/login";
 
 const mainStore = useMainStore()
 const playerStore = usePlayerStore()
@@ -23,6 +24,16 @@ onLaunch(() => {
     mainStore.setTheme('light')
   }
   initPlayer()
+
+  if (userStore.token) {
+    console.log(11111)
+    getUserInfo().then(res => {
+      console.log(res, 'res')
+      userStore.setUserInfo(res.data)
+    })
+    // console.log(data, 'data')
+    
+  }
 })
 
 onThemeChange((res: any) => {

@@ -6,42 +6,20 @@ import TheNavBar from '@/components/TheNavBar.vue'
 import ThePopupLogin from '@/components/ThePopupLogin.vue'
 import ThePlayerBottomBar from '@/components/ThePlayerBottomBar.vue'
 import sectionFrame from '@/components/section/SectionFrame.vue'
-import { onShow, onReady, onLoad } from '@dcloudio/uni-app'
+import { onShow } from '@dcloudio/uni-app'
 import { reactive, ref, computed } from 'vue'
 import { useStore } from '@/store'
-import { getUserInfo } from "@/common/api/login";
 import { useStore as useUserStore } from "@/store/user";
-import { user } from "@/types"
 import dayjs from 'dayjs'
 
 const store = useStore()
 const userStore = useUserStore()
-const navShow = ref<boolean>()
 const userWrapRef = ref<any>()
 
-let userInfo = reactive<user>({
-  // 用户名
-  userName: '',
-  // 性别
-  sex: 0,
-  // 头像
-  avatar: '',
-  // 生日
-  birthday: new Date(),
-  // 地区
-  region: '',
-  // 标签
-  label: [],
-  // 收藏的歌单id
-  listLike: []
-})
-
+const { userInfo } = userStore
 const data = reactive<any>({
   // 初始化状态
   init: false,
-
-  // 用户信息
-  user: {},
 
 })
 
@@ -49,36 +27,8 @@ onShow(async() => {
   store.setTheme('raw', {
     navigationBarColor: '#ffffff'
   })
-  await init()
   data.init = true
 })
-onLoad(() => {
-  console.log('load')
-})
-
-// 初始化
-async function init() {
-  if (userStore.token) {
-    try {
-      const { data } = await getUserInfo()
-      userInfo = data
-      userInfo.label.push('+')
-    } catch (err) {
-      console.log(err)
-    }
-
-  } else {
-    userInfo = {
-      userName: '',
-      sex: 0,
-      avatar: '',
-      birthday: new Date(),
-      region: '',
-      label: [],
-      listLike: []
-    }
-  }
-}
 
 function openPopup() {
   if (!userStore.token) {
@@ -101,6 +51,10 @@ const userInfoTxt = computed(() => {
 })
 
 const pageStyle = computed(() => store.getPageMetaStyle)
+
+function addTag () {
+  uni.navigateTo({ url: '../login/setLabel' })
+}
 </script>
 
 <template>
@@ -108,10 +62,10 @@ const pageStyle = computed(() => store.getPageMetaStyle)
 
   <!-- ↓ 自定义导航 -->
   <the-nav-bar
-    :title="navShow ? data.user.name : ''"
+    title=""
     :back="false"
     :filter="false"
-    :bg="(navShow as boolean)"
+    :bg="false"
   />
 
   <the-popup-login />
@@ -142,8 +96,11 @@ const pageStyle = computed(() => store.getPageMetaStyle)
           <template> {{ userInfoTxt }} </template>
         </view>
         <view class="user-main-info__labels">
-          <view v-for="(item, key) in userInfo.label" :key="key" style="margin-left: 12rpx;">
+          <view v-for="(item, key) in userInfo.label.slice(0, 2)" :key="key" style="margin-left: 12rpx;">
             <u-tag :text="item" size="mini" plain shape="circle"/>
+          </view>
+          <view style="margin-left: 12rpx;" v-if="userInfo.userName">
+            <u-tag text="+" size="mini" plain shape="circle" @click="addTag"/>
           </view>
         </view>
       </view>

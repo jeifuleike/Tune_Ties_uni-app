@@ -2,14 +2,12 @@
 import TheNavBar from '@/components/TheNavBar.vue'
 import { useStore as useMainStore } from '@/store'
 import { onShow } from '@dcloudio/uni-app'
-import { ref } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { user } from "@/types"
-import { getUserInfo, changeUserInfo } from "@/common/api/login";
-import { computed } from 'vue';
+import { changeUserInfo } from "@/common/api/login";
 import { useStore as useUserStore } from "@/store/user";
 import day from 'dayjs';
-import { reactive } from 'vue';
-import { province, urban } from "./city.ts"
+import { province, urban } from "./data.ts"
 
 const mainStore = useMainStore()
 const userStore = useUserStore()
@@ -18,20 +16,7 @@ onShow(() => {
   mainStore.setTheme('raw')
 })
 
-const userInfo = ref<user>({
-  // 用户名
-  userName: '',
-  // 性别
-  sex: 0,
-  // 头像
-  avatar: '',
-  // 生日
-  birthday: new Date(),
-  // 地区
-  region: '',
-  // 标签
-  label: []
-})
+const { userInfo } = userStore
 
 const finishData = ref<user>({
   // 用户名
@@ -56,14 +41,11 @@ const regionColumns = reactive([
 ])
 
 function getInfo() {
-  getUserInfo().then(res => {
-    userInfo.value = res.data
-    finishData.value = JSON.parse(JSON.stringify(res.data))
-  })
+  finishData.value = JSON.parse(JSON.stringify(userInfo))
 }
 
 const birthday = computed(() => {
-  return day(userInfo.value.birthday).format('YYYY-M-D')
+  return day(userInfo.birthday).format('YYYY-M-D')
 })
 
 // 上传头像
@@ -83,7 +65,7 @@ const afterRead = (event: any) => {
           title: res.msg,
           duration: 2000
         });
-        getInfo()
+        userStore.setUserInfo({ avatar: res.data.avatarPath })
       }
     },
     fail: (error) => {
@@ -96,10 +78,11 @@ const afterRead = (event: any) => {
 // 统一修改
 async function changeUser (key: keyof user, value?:any) {
   if (value !== undefined) {
-    console.log(value, 'value')
     await changeUserInfo({ [key]: value })
+    userStore.setUserInfo({ [key]: value })
   } else {
     await changeUserInfo({ [key]: finishData.value[key] })
+    userStore.setUserInfo({ [key]: finishData.value[key] })
   }
   getInfo()
 }
@@ -150,6 +133,15 @@ function finishRegionShow (e:any) {
   changeUser('region', e.value.join(' '))
   regionShow.value = false
 }
+
+// 前往添加标签页
+function setLabel () {
+  uni.navigateTo({ url: './setLabel' })
+}
+
+function tag() {
+  uni.navigateTo({ url: './setLabel' })
+}
 </script>
 
 <template>
@@ -192,13 +184,17 @@ function finishRegionShow (e:any) {
           <text v-else>{{ userInfo.region }}</text>
         </template>
       </u-cell>
-      <u-cell :border="false" isLink>
+      <u-cell @click="setLabel" :border="false" isLink>
         <template #title>
     		  <text class="u-cell-text">标签</text>
     	  </template>
         <template #value>
           <text class="u-cell-text" v-if="!userInfo.label.length">请添加</text>
-          <text v-else>{{ userInfo.region }}</text>
+          <view class="tagView">
+            <view v-for="i in userInfo.label.slice(0, 2)" :key="i" style="margin-left: 10rpx;">
+              <u-tag :text="i" size="mini" plain @click="tag"/>
+            </view>
+          </view>
     	  </template>
       </u-cell>
     </view>
@@ -269,6 +265,9 @@ function finishRegionShow (e:any) {
   .u-cell-text {
     font-size: 32rpx;
     color: var(--theme-text-sub-color);
+  }
+  .tagView {
+    display: flex;
   }
 }
 .u-icon__icon {

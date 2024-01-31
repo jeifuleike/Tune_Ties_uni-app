@@ -136,6 +136,16 @@
         "backgroundColorTop": "#fff",
         "backgroundColorBottom": "#F8F8F8"
       }
+    },
+    {
+      "path": "pages/login/setLabel",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "添加音乐标签",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
     }
   ],
   "globalStyle": {
@@ -144,6 +154,7 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
+  
   "tabBar": {
     "color": "#3b3b3b",
     "backgroundColor": "#fff",

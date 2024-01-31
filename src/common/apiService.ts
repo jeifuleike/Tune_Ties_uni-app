@@ -111,7 +111,8 @@ export class Request {
           // 检查HTTP状态码
           if (res.statusCode === 401) {
             // 处理401错误，清空用户token并导航到登录页面
-            useStore().setUserInfo('');
+            useStore().setUserToken('');
+            useStore().quitUser()              
             uni.switchTab({
               url: '/pages/index/home'
             });

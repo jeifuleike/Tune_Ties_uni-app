@@ -77,7 +77,8 @@ async function finish() {
       title: res.msg,
       duration: 2000
     });
-    userStore.setUserInfo(res.data.token)
+    userStore.setUserToken(res.data.token)
+    userStore.setUserInfo(res.data.userInfo)
     setTimeout(() => {
       if (data.type === 'register') {
         uni.navigateTo({ url: './profile' })
@@ -96,7 +97,7 @@ async function finish() {
 
 const btnDisabled = computed(() => {
   if (data.type === 'register') {
-    return data.password.length < 3 || !(data.password === data.confirmPassword)
+    return data.password.length < 3 || !(data.password === data.confirmPassword) || data.userName.length < 3
   } else {
     return data.password.length < 3
   }
@@ -119,6 +120,7 @@ const btnDisabled = computed(() => {
       <!-- 手机号输入框 -->
       <view class="login-at-phone__main-input">
         <input
+          :value="data.userName"
           @input="inputPhone"
           class="login-at-phone__main-input-content"
           placeholder="输入用户名"
@@ -132,6 +134,7 @@ const btnDisabled = computed(() => {
       <!-- 密码输入框 -->
       <view class="login-at-phone__main-input">
         <input
+          :value="data.password"
           @input="inputPassword"
           class="login-at-phone__main-input-content"
           type="password"
@@ -143,6 +146,7 @@ const btnDisabled = computed(() => {
       <template v-if="data.type === 'register'">
         <view class="login-at-phone__main-input">
         <input
+          :value="data.confirmPassword"
           @input="confirmInputPassword"
           class="login-at-phone__main-input-content"
           type="password"

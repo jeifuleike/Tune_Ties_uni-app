@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { get } from '@/common/apiService'
 import API from '@/common/api'
 import moment from 'moment'
+import { user } from "@/types"
 
 type UserInfo = {
   // 等级
@@ -42,7 +43,23 @@ type UserInfo = {
 export const useStore = defineStore('user', {
   state: () => {
     return {
-      token: uni.getStorageSync('token')? uni.getStorageSync('token') : ''
+      token: uni.getStorageSync('token')? uni.getStorageSync('token') : '',
+      userInfo: {
+        // 用户名
+        userName: '',
+        // 性别
+        sex: 0,
+        // 头像
+        avatar: '',
+        // 生日
+        birthday: new Date(),
+        // 地区
+        region: '',
+        // 标签
+        label: [],
+        // 收藏的歌单id
+        listLike: []
+      } as user
     }
   },
   actions: {
@@ -229,9 +246,14 @@ export const useStore = defineStore('user', {
       }
     },
     // 存储用户token
-    setUserInfo(token: string) {
+    setUserToken(token: string) {
       this.token = token
       uni.setStorageSync('token', token)
+    },
+
+    // 修改用户信息
+    setUserInfo(data: any) {
+      Object.assign(this.userInfo, data)
     }
   }
 })

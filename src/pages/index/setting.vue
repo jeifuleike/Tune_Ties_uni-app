@@ -8,9 +8,6 @@ import { useStore as useUserStore } from '@/store/user'
 
 const store = useStore()
 const userStore = useUserStore()
-const data = reactive<any>({
-  // 初始化状态
-})
 
 onShow(() => store.setTheme('raw'))
 
@@ -38,12 +35,20 @@ let show = ref<boolean>(false)
 
 function confirm() {
   show.value = false
-  userStore.setUserInfo('')
   uni.showToast({
     title: '退出登录成功！',
     duration: 2000
   });
-  userStore.setUserInfo('')
+  userStore.setUserToken('')
+  userStore.setUserInfo({
+    userName: '',
+    sex: 0,
+    avatar: '',
+    birthday: new Date(),
+    region: '',
+    label: [],
+    listLike: []
+  })
   setTimeout(() => {
     uni.switchTab({ url: '../index/home' })
   }, 2000)

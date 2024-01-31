@@ -57,7 +57,7 @@ function back() {
         @click="back"
       />
 
-      <text class="nav-bar__title text-ellipsis-single" :style="{ color: titleColor || 'black' }">
+      <text class="nav-bar__title text-ellipsis-single" >
         {{ props.title }}
       </text>
 
