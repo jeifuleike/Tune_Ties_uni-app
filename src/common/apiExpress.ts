@@ -9,6 +9,12 @@ const api = {
     GET_USERINFO: '/user/userInfo',
     POST_LOGIN: '/user/login',
     POST_CHANGEUSERINFO: '/user/changeUserInfo'
+  },
+  CHAT: {
+    POST_ADDFRIENDREQ: '/chat/addFriendReq',
+    POST_GETCONTACT: '/chat/newReqInfo',
+    POST_HANDLEFRIENDREQ: '/chat/handleFriendRequest',
+    GET_CONTENTS: '/chat/contents'
   }
 } satisfies apiType;
 // 遍历处理对象给全部api加上/express/api头

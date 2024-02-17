@@ -67,6 +67,8 @@ export type Song = {
 }
 
 export type user = {
+  // 用户id
+  userId: number,
   // 用户名
   userName: string,
   // 性别

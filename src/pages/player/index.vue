@@ -2,13 +2,16 @@
 import ThePopupArtist from '@/components/ThePopupArtist.vue'
 import ThePlayerPoster from '@/components/ThePlayerPoster.vue'
 import ThePlayerQueue from '@/components/ThePlayerQueue.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useStore as useMainStore } from '@/store'
 import { useStore as usePlayerStore } from '@/store/player'
 import { onLoad } from '@dcloudio/uni-app'
+import { useStore as useChatStore } from "@/store/chat";
 
 const mainStore = useMainStore()
 const playerStore = usePlayerStore()
+const chatStore = useChatStore()
+
 const playMode = computed(() => {
   return playerStore.playerStatus.mode || 1
 })
@@ -18,6 +21,30 @@ onLoad((query: any) => {
   const { payload, type = 'poster' } = query
   pageType.value = type
 })
+
+watch(chatStore.friendInfo, (nVal) => {
+  if (nVal.userId === -1) return
+  // 监听断开连接
+  chatStore.matchSocket.on('otherOut', (res:any) => {
+    chatStore.qeitMatchSocket()
+    uni.showToast({
+  	  title: '对方已经退出聊天！',
+      icon: 'none',
+      duration: 2000
+    })
+    setTimeout(() => {
+      const curPages = getCurrentPages()
+      // 当没有上一页的时候直接返回主页
+      if (curPages.length === 1) {
+        uni.switchTab({
+          url: '../index/home'
+        })
+      } else {
+        uni.navigateBack({ delta: 1 })
+      }
+    }, 2000)
+  });
+}, { immediate: true })
 
 // 暂停/开始
 function playerStatusChange() {
@@ -60,13 +87,29 @@ function toQueue() {
   pageType.value = pageType.value === 'poster' ? 'queue' : 'poster'
 }
 
+const quitType = ref<'artist' | 'back'>('back')
+
 // 前往歌手详情页
 function toDetailArtist() {
-  uni.$emit('popupOpen', playerStore.playerInfo.ar)
+  if (!chatStore.matchSocket) {
+    uni.$emit('popupOpen', playerStore.playerInfo.ar)
+  } else { 
+    show.value = true
+    quitType.value = 'artist'
+  }
+
 }
 
 // 退出页面
 function back() {
+  if (!chatStore.matchSocket) toBack()
+  else {
+    show.value = true
+    quitType.value = 'back'
+  }
+}
+
+function toBack() {
   const curPages = getCurrentPages()
   // 当没有上一页的时候直接返回主页
   if (curPages.length === 1) {
@@ -83,6 +126,23 @@ const backgroundLoad = ref<boolean>(false)
 function bgLoad() {
   setTimeout(() => (backgroundLoad.value = true), 100)
 }
+
+const show = ref(false)
+
+// 如果建立了在线聊天就需要先退出聊天才能切换
+function confirm() {
+  chatStore.qeitMatchSocket()
+  switch (quitType.value) {
+    case 'artist':
+      uni.$emit('popupOpen', playerStore.playerInfo.ar)
+      break;
+    case 'back':
+      toBack()
+      break;
+  }
+  show.value = true
+}
+
 </script>
 
 <template>
@@ -90,6 +150,13 @@ function bgLoad() {
 
   <the-popup-artist />
 
+  <u-modal 
+    :show="show"
+    content='此操作会导出退出在线聊天确定吗'
+    :showCancelButton="true"
+    @cancel="show = false"
+    @confirm="confirm"
+  />
   <!-- ↓ 播放器详情 -->
   <view class="detail-player">
     <image

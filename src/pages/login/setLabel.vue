@@ -93,7 +93,7 @@ async function finish() {
 </script>
 
 <template>
-  <the-nav-bar title="添加音乐标签" :back="true" />
+  <the-nav-bar title="添加音乐标签" :back="true" :filter="false" :bg="true"  />
   <view class="box">
     <u-button text="完成" :hairline="false" type="success" plain :customStyle="finishClass" @click="finish"/>
     <view class="selectTags">

@@ -3,18 +3,21 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
 import { durationConvert } from '@/common/util'
+import matchChats from "./matchChats.vue";
 import { useStore as usePlayerStore } from '@/store/player'
 import { useStore as useUserStore } from "@/store/user";
+import { useStore as useChatStore } from "@/store/chat"
 
 const seeking = ref<boolean>(false)
 const loading = ref<boolean>(true)
 const playerStore = usePlayerStore()
+const chatStore = useChatStore()
+const useStore = useUserStore()
 /**
  * 只有在打开了播放器页面时，才开启旋转动画
  */
 const aps = computed(() => (!playerStore.playerStatus.paused ? 'running' : 'paused'))
 
-const { userInfo } = useUserStore()
 
 /**
  * 调整进度
@@ -44,6 +47,32 @@ function ratioChanging() {
 onMounted(() => {
   setTimeout(() => (loading.value = false), 0)
 })
+
+const isShow = ref(false)
+
+const showLogin = ref(false)
+// 点击开启一起听
+function listenTogether() {
+  if (!useStore.token) {
+    showLogin.value = true
+    return
+  }
+  if (!chatStore.matchSocket) {
+    isShow.value = true
+  } else {
+    uni.navigateTo({
+      url: `../chat/musicChat`
+    })
+  }
+}
+
+// 前往登录
+function loginConfirm() {
+  uni.navigateTo({
+    url: `../login/register`
+  })
+}
+
 </script>
 
 <template>
@@ -56,10 +85,15 @@ onMounted(() => {
     <!-- 2. css半透明背景, 可有可无的装饰 -->
     <view class="player-page-cd__poster-bg" />
 
-    <view>
-      <u-avatar :src="userInfo.avatar" :size="60" />
-      <u-avatar src="@/static/+.png" :size="60" />
-      <text>一起听</text>
+    <view class="listen" @click="listenTogether">
+      <span v-if="!chatStore.friendInfo.userName">点我寻找一起在听的他/她吧 ></span>
+      <View class="avatars" v-else>
+        <view style="display: flex;">
+          <image class="avatar" :src="useStore.userInfo.avatar"/>
+          <image class="avatar" :src="chatStore.friendInfo.avatar"/>
+        </view>
+        <span>回到聊天 >>></span>
+      </View>
     </view>
     <!-- 3. 唱片封面，播放时旋转 -->
     <view class="player-page-cd__poster">
@@ -99,6 +133,17 @@ onMounted(() => {
         {{ timeConver(playerStore.playerStatus.duration) }}
       </view>
     </view>
+    <matchChats
+      v-model="isShow"
+      :payload="playerStore.playerInfo.payload"
+    />
+    <u-modal 
+      :show="showLogin"
+      content='使用此功能前需先登录，是否前往登录？'
+      :showCancelButton="true"
+      @cancel="showLogin = false"
+      @confirm="loginConfirm"
+    />
   </view>
 </template>
 
@@ -115,7 +160,19 @@ onMounted(() => {
     transform: translate3d(-30rpx, calc(320rpx * -1.5), 0) rotate(-30deg) !important;
   }
 
-  // 1. 唱针
+  .listen {
+    position: absolute;
+    right: 50%;
+    transform: translate(50%);
+    bottom: 11%;
+    font-size: 12px;
+    background-color: rgba(62, 63, 68, 0.5);
+    color: #DBDEE3;
+    border-radius: 12px;
+    padding: 6px 10px;
+    width: 158px;
+  }
+    // 1. 唱针
   .player-page-cd__stylus {
     z-index: 9999;
     position: absolute;
@@ -214,6 +271,15 @@ onMounted(() => {
         margin: 0;
       }
     }
+  }
+}
+.avatars {
+  display: flex;
+  justify-content: space-around;
+  .avatar {
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 50rpx;
   }
 }
 </style>

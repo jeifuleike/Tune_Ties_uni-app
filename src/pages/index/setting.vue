@@ -41,6 +41,7 @@ function confirm() {
   });
   userStore.setUserToken('')
   userStore.setUserInfo({
+    userId: 1,
     userName: '',
     sex: 0,
     avatar: '',
@@ -49,9 +50,6 @@ function confirm() {
     label: [],
     listLike: []
   })
-  setTimeout(() => {
-    uni.switchTab({ url: '../index/home' })
-  }, 2000)
 }
 
 </script>

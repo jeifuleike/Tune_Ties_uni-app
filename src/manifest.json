@@ -50,6 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
+        "libVersion": "latest", 
         "appid" : "wxd94b3e8ff489d5b4",
         "lazyCodeLoading" : "requiredComponents",
         "darkmode" : true,

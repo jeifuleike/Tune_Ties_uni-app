@@ -1,16 +1,41 @@
-<!--
-Description: 选择登录方式
--->
 
 <script lang="ts" setup>
 import ThePopupFrame from './ThePopupFrame.vue'
+import { addFriendReq } from "@/common/api/chat";
+import { useStore as useChatStore } from "@/store/chat"
 
-const urls = [`../../pages/login/register?type=register`, `../../pages/login/register?type=login`]
+const chatStore = useChatStore()
+
+async function addContacts () {
+  const reqData = {
+    friendId: chatStore.friendInfo.userId,
+  }
+  const res = await addFriendReq(reqData)
+  if (res.state === 1) {
+    uni.showToast({
+      title: '已发送请求',
+      duration: 2000
+    })
+  }
+}
+
+function chatOut() {
+  chatStore.qeitMatchSocket()
+  const curPages = getCurrentPages()
+  // 当没有上一页的时候直接返回主页
+  if (curPages.length === 1) {
+    uni.switchTab({
+      url: '../index/home'
+    })
+  } else {
+    uni.navigateBack({ delta: 1 })
+  }
+}
+
+const fns = [addContacts, chatOut]
 function toLogin(data: any) {
   close()
-  uni.navigateTo({
-    url: urls[data]
-  })
+  fns[data]()
 }
 
 function close() {

@@ -1,11 +1,3 @@
-<!--
-Author: zusheng
-Date: 2022-04-30 21:25:28
-LastEditTime: 2022-05-15 20:03:19
-Description: 主页列表通用框架
-FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionFrame.vue
--->
-
 <script lang="ts" setup>
 const props = defineProps<{
   // 分区标题

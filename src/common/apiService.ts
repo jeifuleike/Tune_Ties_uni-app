@@ -106,13 +106,21 @@ export class Request {
         method: method,
         header: header,
         success: (res: any) => {
-          console.log(res, 'res');
 
           // 检查HTTP状态码
           if (res.statusCode === 401) {
             // 处理401错误，清空用户token并导航到登录页面
             useStore().setUserToken('');
-            useStore().quitUser()              
+            useStore().setUserInfo({
+              userId: 1,
+              userName: '',
+              sex: 0,
+              avatar: '',
+              birthday: new Date(),
+              region: '',
+              label: [],
+              listLike: []
+            })              
             uni.switchTab({
               url: '/pages/index/home'
             });

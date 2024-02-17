@@ -1,10 +1,3 @@
-<!--
-Author: zusheng
-Date: 2022-04-26 08:36:58
-LastEditTime: 2022-05-15 18:59:57
-Description: 封面卡片
-FilePath: \uni-preset-vue-vite-ts\src\components\CardPoster.vue
--->
 
 <script lang="ts" setup>
 const props = defineProps<{

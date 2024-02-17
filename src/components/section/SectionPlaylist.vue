@@ -1,10 +1,3 @@
-<!--
-Author: zusheng
-Date: 2022-04-30 21:25:28
-LastEditTime: 2022-05-15 11:58:11
-Description: 首页分区-播放列表卡片
-FilePath: \uni-preset-vue-vite-ts\src\components\section\SectionPlaylist.vue
--->
 
 <script lang="ts" setup>
 import SectionFrame from '@/components/section/SectionFrame.vue'

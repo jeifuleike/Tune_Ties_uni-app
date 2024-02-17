@@ -100,7 +100,7 @@ function closePopup() {
     left: 0;
     bottom: 0;
     width: 100%;
-    background: var(--theme-background-color-card);
+    background: #fff;
     border-radius: 24rpx 24rpx 0 0;
     padding: 15rpx;
     box-sizing: border-box;

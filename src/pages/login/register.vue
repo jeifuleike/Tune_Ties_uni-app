@@ -37,7 +37,7 @@ onShow(() => {
   }
 })
 
-onLoad((options) => {
+onLoad((options: any) => {
   data.type = options.type
 })
 

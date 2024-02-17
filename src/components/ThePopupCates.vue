@@ -1,10 +1,4 @@
-<!--
-Author: zusheng
-Date: 2022-05-01 23:49:11
-LastEditTime: 2022-05-15 11:16:28
-Description: 歌单广场所有歌单分类选择时弹出
-FilePath: \uni-preset-vue-vite-ts\src\components\ThePopupCates.vue
--->
+
 
 <script lang="ts" setup>
 import ThePopupFrame from './ThePopupFrame.vue'
@@ -67,7 +61,7 @@ function close() {
     width: 72rpx;
     flex-shrink: 0;
     margin-left: 20.5rpx;
-    background: var(--theme-text-sub-color);
+    background-color: black;
     mask-size: 40rpx auto;
     mask-repeat: no-repeat;
     mask-image: url('@/static/icon-arrow-bottom.png');

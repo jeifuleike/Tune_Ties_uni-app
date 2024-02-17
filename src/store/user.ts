@@ -45,6 +45,8 @@ export const useStore = defineStore('user', {
     return {
       token: uni.getStorageSync('token')? uni.getStorageSync('token') : '',
       userInfo: {
+        // 用户id
+        userId: -1,
         // 用户名
         userName: '',
         // 性别

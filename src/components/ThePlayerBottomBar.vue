@@ -1,10 +1,4 @@
-<!--
-Author: zusheng
-Date: 2022-04-27 10:34:18
-LastEditTime: 2022-05-16 00:17:25
-Description: 底部小播放器
-FilePath: \uni-preset-vue-vite-ts\src\components\ThePlayerBottomBar.vue
--->
+
 <script lang="ts" setup>
 import { useStore as usePlayerStore } from '@/store/player'
 import { computed } from 'vue'
