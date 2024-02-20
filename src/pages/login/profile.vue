@@ -19,6 +19,7 @@ onShow(() => {
 const { userInfo } = userStore
 
 const finishData = ref<user>({
+  userId: -1,
   // 用户名
   userName: '',
   // 性别

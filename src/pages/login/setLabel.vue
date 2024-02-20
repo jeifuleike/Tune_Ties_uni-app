@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts"  setup>
 import TheNavBar from '@/components/TheNavBar.vue'
 import { changeUserInfo } from "@/common/api/login";
 import { onShow } from '@dcloudio/uni-app'
@@ -10,7 +10,7 @@ onShow(() => {
 })
 
 const label = reactive (labels())
-userStore = useUserStore()
+const userStore = useUserStore()
 
 async function getInfo () {
   const { userInfo } = userStore
@@ -21,14 +21,14 @@ async function getInfo () {
 
 const list = [{ name: '爱听' }, { name: '兴趣' }, { name: '个人特质' }]
 const current = ref<number>(0)
-function change (e) {
+function change (e: any) {
   current.value = e.target.current
 }
-function changeTab (e) {
+function changeTab (e: any) {
   current.value = e.index
 }
 
-function tagClick (i) {
+function tagClick (i: any) {
   console.log(i, 'i')
   if (tagLabels.value.length > 6 && !i.selected) {
     uni.showToast({
@@ -39,7 +39,7 @@ function tagClick (i) {
   }
   i.selected = !i.selected
 }
-function reClick(i) {
+function reClick(i: any) {
   updateLabelSelected(i, false)
 }
 
@@ -51,7 +51,7 @@ const tagLabels = computed(() => {
 })
 
 // 根据传入的名字改选择状态
-function updateLabelSelected (value, isSelected) {
+function updateLabelSelected (value: any, isSelected: any) {
   for (const group of label) {
     const lab = group.find(label => label.value === value);
     if (lab) {
@@ -103,9 +103,9 @@ async function finish() {
     </view>
     <view>
 	  	<view>
-	  		<u-tabs ref="uTabs" :list="list" :current="current.value" @click="changeTab" :is-scroll="false"/>
+	  		<u-tabs ref="uTabs" :list="list" :current="current" @click="changeTab" :is-scroll="false"/>
 	  	</view>
-	  	<swiper style="height: 780rpx;" :current="current.value" @change="change">
+	  	<swiper style="height: 780rpx;" :current="current" @change="change">
 	  		<swiper-item v-for="(item, index) in label" :key="index">
           <view class="view">
             <view v-for="i in item" :key="i.value" class="tag">

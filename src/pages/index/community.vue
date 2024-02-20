@@ -1,6 +1,3 @@
-<!--
-Description: 社区
--->
 <script lang="ts" setup>
 import ThePlayerBottomBar from '@/components/ThePlayerBottomBar.vue'
 import TheNavBar from '@/components/TheNavBar.vue'

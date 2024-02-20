@@ -2,13 +2,17 @@
     首页搜索
  -->
 <script lang="ts" setup>
-
+function toSearch() {
+  uni.navigateTo({
+    url: '../../pages/search/index'
+  })
+}
 </script>
 
 <template>
   <!-- 首页搜索 -->
   <view class="search-container">
-    <input type="text" placeholder="搜一搜" class="musicInput">
+    <input :disabled="true" @click="toSearch" type="text" placeholder="搜一搜" class="musicInput">
     <img src="../static/search.png" class="search-icon" alt="">
   </view>
 </template>
