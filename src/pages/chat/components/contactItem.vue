@@ -56,7 +56,9 @@ async function handleReq(state: 'Approved' | 'Rejected') {
         <text class="contactTime">
           {{ dayjs(props.lastTime).format('HH:mm') }}
         </text>
-        <u-badge :value="props.unReadMsg"/>
+        <view>
+          <u-badge :value="props.unReadMsg"/>
+        </view>
       </template>
       <template v-if="props.state">
         <view style="display: flex; align-items: center; height: 100%;" v-if="props.state.type === 'Pending' && props.state.user === 'TargetUser'">

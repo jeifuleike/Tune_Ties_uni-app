@@ -5,6 +5,8 @@ import TheNavBar from '@/components/TheNavBar.vue'
 import { computed } from 'vue';
 import { useStore } from '@/store';
 import { useStore as useUserStore } from "@/store/user";
+import { Request } from '@/common/apiService';
+import contactItem from '@/pages/chat/components/contactItem.vue';
 
 const userStore = useUserStore()
 
@@ -27,6 +29,19 @@ const pageStyle = computed(() => store.getPageMetaStyle)
   <the-player-bottom-bar />
   <view style="height: 100vh; margin-top: 56px; background-color: #fff;">
     <scroll-view v-if="userStore.token">
+      <contactItem
+        avatar="http://localhost:4000/public/images/userImage/3-1706624680742.jpeg"
+        name="qweq"
+        lastMsg="今天好热啊"
+        :unReadMsg="2"
+        :lastTime="(new Date()).getTime()"
+      />
+      <contactItem
+        avatar="http://localhost:4000/public/images/userImage/defaultUser.png"
+        name="wewewe"
+        lastMsg="对的"
+        :lastTime="(new Date()).getTime() - (10 * 60 * 1000)"
+      />
       <!-- <contactItem/> -->
     </scroll-view>
     <view class="toLogin" v-else>

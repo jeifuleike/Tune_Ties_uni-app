@@ -69,6 +69,12 @@ async function getContacts() {
   contacts.value = data
 }
 
+// 前往聊天室
+function goToChatRoom(id: number) {
+  uni.navigateTo({
+    url: '../chat/friendChat?id=' + id
+  })
+}
 </script>
 
 <template>
@@ -89,11 +95,15 @@ async function getContacts() {
       />
       <View class="tab">联系人</View>
 
-      <contactItem
+      <view
         v-for="item in contacts"
-        :avatar="getContactInfo(item).data.avatar"
-        :name="getContactInfo(item).data.userName"
-      />
+        @click="goToChatRoom(getContactInfo(item).data.userId)"
+      >
+        <contactItem
+          :avatar="getContactInfo(item).data.avatar"
+          :name="getContactInfo(item).data.userName"
+        />
+      </view>
     </scroll-view>
     <view class="toLogin" v-else>
       <image src="../../static/toLogin.png"/>

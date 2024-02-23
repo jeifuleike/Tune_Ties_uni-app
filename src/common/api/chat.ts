@@ -33,3 +33,10 @@ export function getContents() {
     url: api.CHAT.GET_CONTENTS
   })
 }
+
+// 获取与好友的历史记录
+export function getChatHistory(id: number) {
+  return request({
+    url: api.CHAT.GET_CHATHISTORY + '/' + id,
+  })
+}

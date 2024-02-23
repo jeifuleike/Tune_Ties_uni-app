@@ -1,10 +1,3 @@
-<!--
-Author: zusheng
-Date: 2022-04-29 12:41:58
-LastEditTime: 2022-05-14 22:54:06
-Description: 歌曲列表-虚拟无限滚动列表
-FilePath: \uni-preset-vue-vite-ts\src\components\ListSongsInfinite.vue
--->
 
 <script lang="ts" setup>
 import { Song } from '@/types'
@@ -180,7 +173,7 @@ function tapHandler(e: any) {
               src="@/static/ecs.png"
               mode="aspectFit"
             />
-            <text class="text-ellipsis-single">{{ item.artist }} - {{ item.album }}</text>
+            <text v-if="typeof item.artist == 'object'" class="text-ellipsis-single">{{ item.artist }} - {{ item.album }}</text>
           </view>
         </view>
       </view>

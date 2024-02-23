@@ -14,7 +14,8 @@ const api = {
     POST_ADDFRIENDREQ: '/chat/addFriendReq',
     POST_GETCONTACT: '/chat/newReqInfo',
     POST_HANDLEFRIENDREQ: '/chat/handleFriendRequest',
-    GET_CONTENTS: '/chat/contents'
+    GET_CONTENTS: '/chat/contents',
+    GET_CHATHISTORY: '/chat/chatHistory'
   }
 } satisfies apiType;
 // 遍历处理对象给全部api加上/express/api头

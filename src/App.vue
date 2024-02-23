@@ -4,12 +4,15 @@ import { createPlayer } from '@/common/player'
 import { useStore as useMainStore } from '@/store'
 import { useStore as usePlayerStore } from '@/store/player'
 import { useStore as useUserStore } from '@/store/user'
+import { useStore as useChatStore } from '@/store/chat'
 import { onLaunch, onThemeChange } from '@dcloudio/uni-app'
 import { getUserInfo } from "@/common/api/login";
+
 
 const mainStore = useMainStore()
 const playerStore = usePlayerStore()
 const userStore = useUserStore()
+const chatStore = useChatStore()
 const systemInfo: any = uni.getSystemInfoSync()
 
 onLaunch(() => {
@@ -26,13 +29,11 @@ onLaunch(() => {
   initPlayer()
 
   if (userStore.token) {
-    console.log(11111)
+    chatStore.addChatSocket(userStore.token)
     getUserInfo().then(res => {
-      console.log(res, 'res')
       userStore.setUserInfo(res.data)
     })
     // console.log(data, 'data')
-    
   }
 })
 

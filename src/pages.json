@@ -40,7 +40,7 @@
       "path": "pages/index/community",
       "style": {
         "navigationBarTextStyle": "black",
-        "navigationBarTitleText": "社区",
+        "navigationBarTitleText": "聊天",
         "navigationStyle": "custom",
         "backgroundColorTop": "#fff",
         "backgroundColorBottom": "#F8F8F8"
@@ -167,6 +167,16 @@
         "backgroundColorTop": "#fff",
         "backgroundColorBottom": "#F8F8F8"
       }
+    },
+    {
+      "path": "pages/chat/friendChat",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "在线聊天",
+        "navigationStyle": "custom",
+        "backgroundColorTop": "#fff",
+        "backgroundColorBottom": "#F8F8F8"
+      }
     }
   ],
   "globalStyle": {
@@ -191,7 +201,7 @@
         "pagePath": "pages/index/community",
         "iconPath": "/static/com_3b.png",
         "selectedIconPath": "/static/com_checked.png",
-        "text": "社区"
+        "text": "聊天"
       },
       {
         "pagePath": "pages/index/contact",

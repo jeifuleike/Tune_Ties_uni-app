@@ -22,7 +22,8 @@ export const useStore = defineStore('chat', {
         avatar: '',
         userName: ''
       } as FriendInfo,
-      chatHistory: [] as HistoryTxt[]
+      chatHistory: [] as HistoryTxt[],
+      chatSocket: null as any
     }
   },
   actions: {
@@ -56,6 +57,15 @@ export const useStore = defineStore('chat', {
     // 添加聊天记录
     addChatHistory(txt: HistoryTxt) {
       this.chatHistory.push(txt)
-    }
+    },
+
+    // 建立联系人聊天
+    async addChatSocket(token: number) {
+      this.chatSocket = await io('http://127.0.0.1:4000/friendChats', {
+        query: { token },
+        transports: ['websocket', 'polling'],
+        timeout: 5000,
+      });
+    },
   }
 })

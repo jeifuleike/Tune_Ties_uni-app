@@ -1,12 +1,22 @@
 <script lang="ts" setup>
+import ListSongs from '@/components/ListSongs.vue'
 import TheNavBar from '@/components/TheNavBar.vue'
 import { get } from '@/common/apiService'
 import API from '@/common/api'
 import { ref } from 'vue';
+import { onLoad } from '@dcloudio/uni-app';
 
 const searchVal = ref('')
 const suggestList = ref<any>([])
-const searchOver = ref(true)
+const searchOver = ref(false)
+
+onLoad(() => {
+  if (historyList.value.length === 0) {
+    console.log(uni.getStorageSync('history'), 'uni.getStorageSync')
+    historyList.value = uni.getStorageSync('history')? uni.getStorageSync('history').split(',') : []
+    console.log(historyList.value, 'res.result.songs')
+  }
+})
 
 // 获取搜索联想
 async function searchSuggest () {
@@ -44,7 +54,7 @@ function addHistoryItem () {
   if (historyList.value.length > 15) {
     historyList.value.pop();
   }
-
+  uni.setStorageSync('history', historyList.value.join(','))
 }
 
 async function search () {
@@ -53,6 +63,7 @@ async function search () {
   addHistoryItem()
   searchOver.value = true
   const res = await get(API.SEARCH.GET_SEARCH, { keywords: searchVal.value })
+  suggestList.value = res.result.songs
 }
 
 const emptyHistoryShow = ref(false)
@@ -87,19 +98,24 @@ function emptyHistory () {
     </view>
     </view>
     <view style="height: 100%; padding: 0 30rpx;" v-else>
-      <view class="historyTop">
-        <span class="topLeft">搜索历史</span>
-        <span class="topRight" @click="emptyHistoryShow = true">清空搜索历史</span>
-      </view>
-      <view class="historyList">
-        <view 
-          class="historyItem" 
-          v-for="(item, index) in historyList"
-          :key="index"
-          @click="suggestClick(item)"
-        >
-          {{ item.length > 6 ? item.substring(0,6) + '...' : item }}
+      <view v-if="!searchOver">
+        <view class="historyTop">
+          <span class="topLeft">搜索历史</span>
+          <span class="topRight" @click="emptyHistoryShow = true">清空搜索历史</span>
         </view>
+        <view class="historyList">
+          <view 
+            class="historyItem" 
+            v-for="(item, index) in historyList"
+            :key="index"
+            @click="suggestClick(item)"
+          >
+            {{ item.length > 6 ? item.substring(0,6) + '...' : item }}
+          </view>
+        </view>
+      </view>
+      <view v-else>
+        <ListSongs :trackIds="suggestList.map(item => item.id)" :infinite="false" actionBg="#fff"/>
       </view>
     </view>
   </view>

@@ -1,10 +1,3 @@
-<!--
-Author: zusheng
-Date: 2022-04-26 23:52:31
-LastEditTime: 2022-05-15 11:25:19
-Description: 歌曲列表
-FilePath: \uni-preset-vue-vite-ts\src\components\ListSongs.vue
--->
 
 <script lang="ts" setup>
 import ListSongsInfinite from '@/components/ListSongsInfinite.vue'
@@ -50,7 +43,6 @@ const stopWatcher = watchEffect(() => {
 function getData() {
   // 一次加载数量
   const onceLoadCount = 300
-
   // 当已经请求的数量小于总数量时
   if (data.trackRequestCount <= Math.floor(props.trackIds?.length / onceLoadCount)) {
     if (props.trackIds?.length >= onceLoadCount) {
@@ -177,7 +169,7 @@ function playAll() {
         background-size: 40%;
         background-position: center;
         background-repeat: no-repeat;
-        background-color: var(--theme-color);
+        background-color: #f9343d;
         background-image: url('@/static/icon-play-square.png');
         margin-right: 20.5rpx;
       }
