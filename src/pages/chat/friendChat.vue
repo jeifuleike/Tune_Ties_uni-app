@@ -39,12 +39,7 @@ onLoad(async (query: any) => {
 function handleGetTxt(res: any) {
   const data = res.data
   // 当最新消息距离上一条消息大于5分钟就显示当前时间
-  if (historyChat.value.length === 0 || data.time - historyChat.value[historyChat.value.length - 1].time > 5 * 60 * 1000) {
-    data.showTime = true
-  } else {
-    data.showTime = false
-  }
-  historyChat.value.push(data)
+  historyChat.value = data
   // 处理接收到的消息
 }
 
@@ -57,8 +52,19 @@ async function submit() {
   }
 }
 
+function showTime(lastTime: number, newTime: number) {
+if (!lastTime || newTime - lastTime > 5 * 60 * 1000) {
+    return true
+  } else {
+    return false
+  }
+}
+
+
+
 onUnload(() => {
   chatStore.chatSocket.off('getTxt', handleGetTxt);
+  chatStore.chatSocket.emit('leverRoom')
 })
 
 </script>
@@ -72,7 +78,7 @@ onUnload(() => {
 		</view>
   	  	<view class="msg-list" >
   	  	  <view class="msg-item" :id="`msg${index}`" v-for="(msg, index) in historyChat" :key="msg.id">
-			<view class="tagView" v-if="msg.showTime">
+			<view class="tagView" v-if="showTime(historyChat[index - 1]?.time, msg.time)">
 			  <u-tag :text="dayjs(msg.time).format('M月D日 HH:mm')"/>
 			</view>
   	  	  	<left-bubble

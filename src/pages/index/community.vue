@@ -5,16 +5,38 @@ import TheNavBar from '@/components/TheNavBar.vue'
 import { computed } from 'vue';
 import { useStore } from '@/store';
 import { useStore as useUserStore } from "@/store/user";
-import { Request } from '@/common/apiService';
+import { useStore as useChatStore } from "@/store/chat"
 import contactItem from '@/pages/chat/components/contactItem.vue';
+import { onLoad } from '@dcloudio/uni-app';
+import { ref } from 'vue';
 
+const chatStore = useChatStore()
 const userStore = useUserStore()
+const store = useStore()
 
 // 前往登录
 function login() {
   uni.switchTab({ url: './user' })
 }
-const store = useStore()
+
+onLoad(() => {
+  chatStore.chatSocket.emit('getFriendChatList')
+})
+
+chatStore.chatSocket.on('upFriendChatList', upFriendChatList);
+const friendChatList = ref<any>([])
+
+function upFriendChatList(res: any) {
+  console.log(res, 'res')
+  friendChatList.value = res
+}
+
+// 前往聊天室
+function goToChatRoom(id: number) {
+  uni.navigateTo({
+    url: '../chat/friendChat?id=' + id
+  })
+}
 
 const pageStyle = computed(() => store.getPageMetaStyle)
 </script>
@@ -29,19 +51,18 @@ const pageStyle = computed(() => store.getPageMetaStyle)
   <the-player-bottom-bar />
   <view style="height: 100vh; margin-top: 56px; background-color: #fff;">
     <scroll-view v-if="userStore.token">
-      <contactItem
-        avatar="http://localhost:4000/public/images/userImage/3-1706624680742.jpeg"
-        name="qweq"
-        lastMsg="今天好热啊"
-        :unReadMsg="2"
-        :lastTime="(new Date()).getTime()"
-      />
-      <contactItem
-        avatar="http://localhost:4000/public/images/userImage/defaultUser.png"
-        name="wewewe"
-        lastMsg="对的"
-        :lastTime="(new Date()).getTime() - (10 * 60 * 1000)"
-      />
+      <view
+        v-for="item in friendChatList"
+        @click="goToChatRoom(item.userInfo.userId)"
+      >
+        <contactItem
+          :avatar="item.userInfo.avatar"
+          :name="item.userInfo.userName"
+          :lastMsg="item.lastMessage.txt"
+          :lastTime="item.lastMessage.SendTime"
+        />
+      </view>
+
       <!-- <contactItem/> -->
     </scroll-view>
     <view class="toLogin" v-else>
