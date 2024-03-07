@@ -20,10 +20,12 @@ function login() {
 }
 
 onLoad(() => {
-  chatStore.chatSocket.emit('getFriendChatList')
+  if (userStore.token) {
+    chatStore.chatSocket.emit('getFriendChatList')
+    chatStore.chatSocket.on('upFriendChatList', upFriendChatList);
+  }
 })
 
-chatStore.chatSocket.on('upFriendChatList', upFriendChatList);
 const friendChatList = ref<any>([])
 
 function upFriendChatList(res: any) {
@@ -47,8 +49,6 @@ const pageStyle = computed(() => store.getPageMetaStyle)
   <!-- ↓ 自定义导航 -->
   <the-nav-bar title="聊天" :back="false" :filter="false" :bg="true" />
 
-  <!-- ↓ 播放器 -->
-  <the-player-bottom-bar />
   <view style="height: 100vh; margin-top: 56px; background-color: #fff;">
     <scroll-view v-if="userStore.token">
       <view
@@ -78,4 +78,12 @@ const pageStyle = computed(() => store.getPageMetaStyle)
 </template>
 
 <style lang="scss" scoped>
+.toLogin {
+  padding: 15px;
+  height: 100%;
+  text-align: center;
+  image {
+    width: calc(100vw - 30px);
+  }
+}
 </style>

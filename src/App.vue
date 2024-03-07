@@ -29,8 +29,10 @@ onLaunch(() => {
   initPlayer()
 
   if (userStore.token) {
-    chatStore.addChatSocket(userStore.token)
     getUserInfo().then(res => {
+      if (res.state === 1) {
+        chatStore.addChatSocket(userStore.token)
+      }
       userStore.setUserInfo(res.data)
     })
     // console.log(data, 'data')

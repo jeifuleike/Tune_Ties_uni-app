@@ -11,8 +11,9 @@ import SectionTopic from '@/components/section/SectionTopic.vue'
 import SectionTablist from '@/components/section/SectionTablist.vue'
 import SectionMusicCalendar from '@/components/section/SectionMusicCalendar.vue'
 import { onPullDownRefresh, onReachBottom, onShow } from '@dcloudio/uni-app'
-import { reactive, computed, toRaw } from 'vue'
+import { reactive, computed, toRaw, ref } from 'vue'
 import { useStore } from '@/store'
+import { getHomeTypeset } from "@/common/api/home";
 
 const store = useStore()
 const data = reactive<any>({
@@ -53,6 +54,8 @@ onShow(() => {
   store.setTheme('raw')
 })
 
+const homeTypeset = ref([])
+
 init()
 // 加载首屏数据
 function init() {
@@ -60,10 +63,13 @@ function init() {
     title: '加载中',
     mask: true
   })
-  store.getHomePage(data.offset).then((res: any) => {
+  store.getHomePage(data.offset).then( async (res: any) => {
     data.more = res.more
     data.offset = res.offset
-    const homePageRes = getHomePageHandler(res.data)
+    const req = await getHomeTypeset()
+    homeTypeset.value = req.data
+    const homeData = res.data.filter((item: any) => req.data.includes(item.blockCode))
+    const homePageRes = getHomePageHandler(homeData)
     const homePageResKeys = Object.keys(homePageRes)
 
     Object.keys(homePageConfig).forEach((key: string) => {
@@ -74,7 +80,7 @@ function init() {
 
     uni.hideLoading()
     uni.stopPullDownRefresh()
-    if (!data.homepage_banner) {
+    if (!data.homepage_banner && homeTypeset.value.includes('HOMEPAGE_BANNER')) {
       data.homepage_banner = {
         data: [{
           bannerId: 1,
@@ -143,7 +149,7 @@ const pageStyle = computed(() => {
     <!-- ↓ 首页banner和入口栏 -->
     <view class="home-banner">
       <!-- 首页搜索 -->
-      <TheHomeSearch />
+      <TheHomeSearch v-if="homeTypeset.includes('search')"/>
       <!-- banner -->
       <section-banner v-if="data.homepage_banner?.data" :list="data.homepage_banner.data" />
     </view>
@@ -345,7 +351,6 @@ const pageStyle = computed(() => {
         }"
       />
     </view>
-    <view v-if="data.loading" class="loading-placeholder">加载中...</view>
   </view>
 </template>
 

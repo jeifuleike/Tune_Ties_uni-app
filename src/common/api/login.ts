@@ -15,7 +15,8 @@ export function register(data: object) {
 export function getUserInfo() {
   return request({
     url: api.LOGIN.GET_USERINFO, 
-    method: "GET", 
+    method: "GET",
+    hideLoading: false
   })
 }
 

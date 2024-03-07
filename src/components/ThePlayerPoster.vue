@@ -53,6 +53,7 @@ const isShow = ref(false)
 const showLogin = ref(false)
 // 点击开启一起听
 function listenTogether() {
+  console.log(playerStore.playerInfo.payload, 'playerStore.playerInfo.payload')
   if (!useStore.token) {
     showLogin.value = true
     return

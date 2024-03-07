@@ -33,11 +33,13 @@ export const getHomePageHandler = (blocks: any) => {
 
         // 音乐日历
         case 'HOMEPAGE_MUSIC_CALENDAR':
+          console.log('音乐日历')
           data[key] = getMusicCalendar(block)
           break
 
         // 热门博客|有声书
         case 'HOMEPAGE_VOICELIST_RCMD':
+          console.log('有声书')
           data[key] = getRcmdVoiceList(block)
           break
 

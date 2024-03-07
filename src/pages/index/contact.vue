@@ -23,9 +23,12 @@ onLoad(() => {
   }
 })
 
+console.log(userStore.token, 'userStore.token')
 onPullDownRefresh( async() => {
-  await getContacts()
-  await getReq()
+  if (userStore.token) {
+    getContacts()
+    getReq()
+  }
 })
 
 // 前往登录

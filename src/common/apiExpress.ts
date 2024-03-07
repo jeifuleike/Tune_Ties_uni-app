@@ -16,6 +16,9 @@ const api = {
     POST_HANDLEFRIENDREQ: '/chat/handleFriendRequest',
     GET_CONTENTS: '/chat/contents',
     GET_CHATHISTORY: '/chat/chatHistory'
+  },
+  HOME: {
+    GET_Home: '/amid/home/homeTypeset'
   }
 } satisfies apiType;
 // 遍历处理对象给全部api加上/express/api头
